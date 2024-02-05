@@ -9,7 +9,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 @Component
-public class WeatherData implements Subject{
+public class WeatherData implements Subject {
     private List<Observer> observers;
     private float temperature;
     private float humidity;
@@ -33,36 +33,33 @@ public class WeatherData implements Subject{
 
     @Override
     public void registerObserver(Observer observer) {
-        observers.add(observer);
+        if (!observers.contains(observer)) {
+            observers.add(observer);
+        }
     }
 
     @Override
     public void removeObserver(Observer observer) {
-       int i = observers.indexOf(observer);
-       if(i >= 0) {
-           observers.remove(observer);
-       }
+        observers.remove(observer);
     }
 
     @Override
     public void notifyObservers() {
-       for(Observer observer : observers) {
-           observer.update(temperature, humidity, pressure);
-       }
+        for (Observer observer : observers) {
+            observer.update(temperature, humidity, pressure);
+        }
     }
 
     @Override
     public List<Observer> getObservers() {
-        return observers;
+        return new ArrayList<>(observers);
     }
 
     public void measurementChanged() {
         notifyObservers();
     }
 
-    public  void setMeasurements(float temperature,
-                                 float humidity,
-                                 float pressure) {
+    public void setMeasurements(float temperature, float humidity, float pressure) {
         this.temperature = temperature;
         this.humidity = humidity;
         this.pressure = pressure;
